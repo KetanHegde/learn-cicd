@@ -1,0 +1,16 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo "Installing dependencies"
+      - python3 --version
+
+  build:
+    commands:
+      - echo "Build step (nothing to compile)"
+
+artifacts:
+  files:
+    - '**/*'
+``
