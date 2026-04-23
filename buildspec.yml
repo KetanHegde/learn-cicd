@@ -13,4 +13,4 @@ phases:
 artifacts:
   files:
     - '**/*'
-  name: build-output
+  name: simple-web-project
