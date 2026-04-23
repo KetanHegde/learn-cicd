@@ -57,4 +57,4 @@ jobs:
             --application-name simple-web-app \
             --deployment-group-name ec2-test-deployment-group \
             --deployment-config-name CodeDeployDefault.OneAtATime \
-            --s3-location bucket=YOUR_ARTIFACT_BUCKET_NAME,key=build-output.zip,bundleType=zip
+            --s3-location bucket=simple-web-build-artifact-bucket,key=build-output.zip,bundleType=zip
