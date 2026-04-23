@@ -82,11 +82,6 @@ jobs:
           # Extract key
           KEY=$(echo $ARTIFACT_ARN | cut -d':' -f6 | cut -d'/' -f2-)
       
-          # Ensure .zip extension
-          if [[ "$KEY" != *.zip ]]; then
-            KEY="$KEY.zip"
-          fi
-      
           echo "BUCKET=$BUCKET" >> $GITHUB_ENV
           echo "KEY=$KEY" >> $GITHUB_ENV
       
