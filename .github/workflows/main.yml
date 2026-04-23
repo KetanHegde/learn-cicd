@@ -44,12 +44,28 @@ jobs:
           echo "BUILD_ID=$BUILD_ID" >> $GITHUB_ENV
           echo "Started CodeBuild with ID: $BUILD_ID"
 
-      # 5️⃣ Wait for CodeBuild to complete
-      - name: Wait for CodeBuild to complete
+      # 5️⃣ Wait for CodeBuild to complete (CORRECT)
+      - name: Wait for CodeBuild to complete (polling)
         run: |
-          aws codebuild wait build-complete --ids $BUILD_ID
-          echo "CodeBuild completed successfully"
-
+          while true; do
+            STATUS=$(aws codebuild batch-get-builds \
+              --ids $BUILD_ID \
+              --query 'builds[0].buildStatus' \
+              --output text)
+      
+            echo "Current build status: $STATUS"
+      
+            if [ "$STATUS" = "SUCCEEDED" ]; then
+              echo "✅ CodeBuild succeeded"
+              break
+            elif [ "$STATUS" = "FAILED" ] || [ "$STATUS" = "FAULT" ] || [ "$STATUS" = "STOPPED" ]; then
+              echo "❌ CodeBuild failed"
+              exit 1
+            else
+              sleep 15
+            fi
+          done
+    
       # 6️⃣ Trigger CodeDeploy
       - name: Trigger CodeDeploy
         run: |
