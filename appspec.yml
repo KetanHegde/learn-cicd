@@ -4,8 +4,20 @@ os: linux
 files:
   - source: /
     destination: /home/ec2-user/app
+    overwrite: yes
 
 hooks:
+  BeforeInstall:
+    - location: scripts/create_dir.sh
+      timeout: 30
+      runas: root
+
+  ApplicationStop:
+    - location: scripts/stop_app.sh
+      timeout: 30
+      runas: ec2-user
+
   ApplicationStart:
-    - location: start.sh
+    - location: scripts/start.sh
       timeout: 60
+      runas: ec2-user
