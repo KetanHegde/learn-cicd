@@ -9,6 +9,10 @@ phases:
   build:
     commands:
       - echo "Build step (nothing to compile)"
+  
+  post_build:
+    commands:
+      - chmod +x scripts/*.sh
 
 artifacts:
   files:
