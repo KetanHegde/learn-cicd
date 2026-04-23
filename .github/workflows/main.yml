@@ -69,18 +69,29 @@ jobs:
       # 6️⃣ Get artifact location dynamically (BEST PRACTICE)
       - name: Get artifact location
         run: |
-          ARTIFACT_PATH=$(aws codebuild batch-get-builds \
+          ARTIFACT_ARN=$(aws codebuild batch-get-builds \
             --ids $BUILD_ID_FULL \
             --query 'builds[0].artifacts.location' \
             --output text)
-
-          echo "Artifact path: $ARTIFACT_PATH"
-
-          BUCKET=$(echo $ARTIFACT_PATH | cut -d'/' -f1)
-          KEY=$(echo $ARTIFACT_PATH | cut -d'/' -f2-)
-
+      
+          echo "Raw artifact location: $ARTIFACT_ARN"
+      
+          # Extract bucket
+          BUCKET=$(echo $ARTIFACT_ARN | cut -d':' -f6 | cut -d'/' -f1)
+      
+          # Extract key
+          KEY=$(echo $ARTIFACT_ARN | cut -d':' -f6 | cut -d'/' -f2-)
+      
+          # Ensure .zip extension
+          if [[ "$KEY" != *.zip ]]; then
+            KEY="$KEY.zip"
+          fi
+      
           echo "BUCKET=$BUCKET" >> $GITHUB_ENV
           echo "KEY=$KEY" >> $GITHUB_ENV
+      
+          echo "Final bucket: $BUCKET"
+          echo "Final key: $KEY"
 
       # 7️⃣ Trigger CodeDeploy
       - name: Trigger CodeDeploy
